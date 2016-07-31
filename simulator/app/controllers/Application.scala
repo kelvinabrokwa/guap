@@ -42,14 +42,21 @@ class Application extends Controller {
   }
 
   def placeBuyOrder = Action { request =>
-    request.body.asJson.map { json =>
-      json.validate[(String)].map{
-        case "hello" => Ok(Json.toJson(BuyOrderResponse(10, 20, "great work!")))
-      }.recoverTotal{
-        e => BadRequest("nah b")
-      }
+    val body: AnyContent = request.body
+    val jsonBody: Option[JsValue] = body.asJson
+
+    case class BuyOrder(amount: Double, currency: String, payment_method: String)
+    implicit val BuyOrderReads: Reads[BuyOrder] = (
+      (JsPath \ "amount").read[Double] and
+        (JsPath \ "currency").read[String] and
+        (JsPath \ "payment_method").read[String]
+      )(BuyOrder.apply _)
+
+    jsonBody.map { json =>
+      print(json.validate[BuyOrder])
+      Ok("ok")
     }.getOrElse {
-      BadRequest("expecting JSON")
+      BadRequest("not ok")
     }
   }
 
