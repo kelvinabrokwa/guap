@@ -1,6 +1,7 @@
 #include <iostream>
 #include "curl_easy.h"
 #include "curl_exception.h"
+#include <json/json.h>
 
 using curl::curl_easy;
 using curl::curl_easy_exception;
