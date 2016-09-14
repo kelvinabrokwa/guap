@@ -1,25 +1,22 @@
-# Module for collecting data
+# Stalker
 
-### Running
+Data collection
 
-Locally
+### Dependencies
 
+- Go
+- Postgres
+
+### Usage
+
+Setup (do once):
+
+```sh
+./setup_db.sh
 ```
-$ GCP_AUTH_JSON=<LOCATION_OF_KEYFILE> node index.js
-```
 
-On Compute Engine
+And then run:
 
-```
-$ node index.js
-```
-
-### Dependecies
-
-- node.js
-
-### Developing
-
-```
-npm install
+```sh
+go run stalker.go
 ```
