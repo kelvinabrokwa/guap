@@ -2,7 +2,10 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-# Home page
 GET     /                           controllers.Application.index
 GET     /price                      controllers.Application.getPrice
 POST    /buys                       controllers.Application.placeBuyOrder
+GET     /buys                       controllers.Application.getBuysHistory
+POST    /sells                      controllers.Application.placeSellOrder
+GET     /sells                      controllers.Application.getSellsHistory
+GET     /wallet                     controllers.Application.getWallet
