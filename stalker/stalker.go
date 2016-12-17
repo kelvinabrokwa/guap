@@ -2,7 +2,6 @@ package main
 
 import (
     "os"
-    "fmt"
     "log"
     "time"
     "net/http"
@@ -24,29 +23,39 @@ type Data struct {
     Volume_percent float64 `json:"volume_percent"`
 }
 
+
 func fetch() {
     res, err := http.Get(url)
+
     if err != nil {
         log.Println(err)
+        return
     }
+
     defer res.Body.Close()
-    data := Data{}
+
+    var data Data
+
     json.NewDecoder(res.Body).Decode(&data)
-    _, err = db.Query(`
+
+    _, err = db.Exec(`
         INSERT INTO
           prices
           (avg_24h, ask, bid, last, time, volume_btc, volume_percent)
         VALUES
-          ($1, $2, $3, $4, $5, $6, $7)
-    `, data.Avg_24h, data.Ask, data.Bid, data.Last, data.Timestamp, data.Volume_btc, data.Volume_percent)
+          ($1, $2, $3, $4, $5, $6, $7)`,
+        data.Avg_24h, data.Ask, data.Bid, data.Last,
+        data.Timestamp, data.Volume_btc, data.Volume_percent)
+
     if err != nil {
         log.Println(err)
     }
 }
 
+
 func main() {
     var err error
-    db, err = sql.Open("postgres", fmt.Sprintf("postgres://%s:%s@localhost/guap?sslmode=disable", os.Args[1], os.Args[2]))
+    db, err = sql.Open("postgres", os.Getenv("GUAP_STALKER_DB_URL"))
     if err != nil {
         log.Panic(err)
     }
@@ -58,3 +67,4 @@ func main() {
         }
     }
 }
+

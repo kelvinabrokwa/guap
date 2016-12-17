@@ -5,6 +5,10 @@ set -e -o pipefail
 dbname="guap"
 
 echo "
+    DROP DATABASE IF EXISTS guap;
+" | psql
+
+echo "
     CREATE DATABASE $dbname;
 " | psql
 
